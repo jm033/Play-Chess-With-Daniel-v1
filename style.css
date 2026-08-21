@@ -1,0 +1,148 @@
+:root {
+    --bg-color: #050505;
+    --text-color: #d3d3d3;
+    --accent-red: #8b0000;
+    --board-dark: #3a2f2a;
+    --board-light: #706257;
+    --highlight: rgba(255, 255, 255, 0.3);
+    --select: rgba(139, 0, 0, 0.6);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Courier New', Courier, monospace;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* EFFECTS */
+.overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 999;
+}
+#vignette {
+    background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.85) 100%);
+}
+#film-grain {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+}
+
+/* SCREENS */
+.screen {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    opacity: 0; visibility: hidden; transition: opacity 0.5s ease;
+}
+.screen.active { opacity: 1; visibility: visible; z-index: 10; }
+.black-screen { background-color: black; z-index: 20; }
+
+/* TYPOGRAPHY */
+h1, h2 { text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; text-align: center; }
+.title { font-size: 2.5rem; }
+.daniel-text {
+    color: var(--accent-red);
+    animation: glitch 3s infinite;
+    display: inline-block;
+    text-shadow: 2px 0 #330000, -2px 0 #000;
+}
+.red-glow { color: var(--accent-red); text-shadow: 0 0 15px red; }
+.mt-2 { margin-top: 20px; }
+.hidden { display: none !important; }
+.error-text { color: red; font-size: 0.8rem; }
+
+/* BUTTONS & UI */
+.button-group { display: flex; gap: 15px; }
+.button-group.vertical { flex-direction: column; }
+.button-group.horizontal { flex-direction: row; flex-wrap: wrap; justify-content: center;}
+
+.ui-btn {
+    background: transparent; color: var(--text-color); border: 1px solid var(--text-color);
+    padding: 15px 30px; font-family: inherit; font-size: 1.2rem; cursor: pointer;
+    text-transform: uppercase; transition: all 0.2s; min-width: 200px;
+}
+.ui-btn.small { padding: 10px 15px; font-size: 1rem; min-width: 100px; }
+.ui-btn:hover { background: rgba(255,255,255,0.1); border-color: white; transform: scale(1.05); }
+.ui-btn:active { transform: scale(0.95); }
+.sys-msg { height: 20px; margin-top: 15px; font-size: 0.9rem; color: #888; }
+
+.settings-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 15px; align-items: center; margin-bottom: 20px;
+}
+.ui-select {
+    background: black; color: white; border: 1px solid white; padding: 10px; font-family: inherit;
+}
+
+/* GAME UI */
+#game-container { display: flex; flex-direction: column; align-items: center; width: 100%; height: 100%; justify-content: space-evenly; }
+#turn-indicator { font-size: 1.2rem; font-weight: bold; letter-spacing: 2px; color: #aaa; }
+.dialogue-box { 
+    font-style: italic; color: #ccc; min-height: 24px; transition: opacity 0.5s; 
+    text-shadow: 0 0 5px black; z-index: 5;
+}
+
+/* CHESSBOARD */
+#chessboard-container {
+    padding: 10px; background: #111; border: 2px solid #222; box-shadow: 0 0 20px rgba(0,0,0,0.8);
+}
+#chessboard { display: grid; grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(8, 1fr); }
+.square { display: flex; justify-content: center; align-items: center; font-size: 2rem; cursor: pointer; position: relative; }
+.dark { background-color: var(--board-dark); }
+.light { background-color: var(--board-light); }
+.square.selected { box-shadow: inset 0 0 15px var(--select); }
+.square.highlight::after { content: ''; width: 25%; height: 25%; background: var(--highlight); border-radius: 50%; position: absolute; }
+.piece { text-shadow: 2px 2px 4px rgba(0,0,0,0.8); z-index: 2; pointer-events: none; }
+.piece.white { color: #f0f0f0; }
+.piece.black { color: #111; text-shadow: 1px 1px 1px #555; } /* Slight border for visibility on dark board */
+
+/* PLAYER AREA */
+.thinking-hands { width: 300px; opacity: 0.6; animation: breath 4s infinite ease-in-out; pointer-events: none; }
+#game-controls { display: flex; gap: 10px; }
+
+/* ANIMATIONS */
+@keyframes glitch {
+    0% { transform: translate(0) }
+    2% { transform: translate(-2px, 1px) }
+    4% { transform: translate(2px, -1px) }
+    6% { transform: translate(0) }
+    100% { transform: translate(0) }
+}
+@keyframes breath {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-5px) scale(1.02); }
+}
+@keyframes shake {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(5px, 5px) rotate(1deg); }
+    50% { transform: translate(-5px, -2px) rotate(-1deg); }
+    75% { transform: translate(-2px, 5px) rotate(0deg); }
+}
+
+.shake-anim { animation: shake 0.4s ease-in-out; }
+.fade-in-slow { opacity: 0; animation: fadeIn 4s forwards; }
+@keyframes fadeIn { to { opacity: 1; } }
+
+/* RESPONSIVE MODES (Controlled by JS Classes on Body) */
+body.mode-pc #chessboard { width: 500px; height: 500px; }
+body.mode-pc .square { font-size: 3rem; }
+
+body.mode-tablet #chessboard { width: 400px; height: 400px; }
+body.mode-tablet .square { font-size: 2.5rem; }
+body.mode-tablet .thinking-hands { width: 250px; }
+
+body.mode-mobile #chessboard { width: 90vw; max-width: 350px; height: 90vw; max-height: 350px; }
+body.mode-mobile .square { font-size: 2rem; }
+body.mode-mobile #game-container { justify-content: space-between; padding: 20px 0; }
+body.mode-mobile .thinking-hands { width: 200px; }
+body.mode-mobile h1 { font-size: 1.8rem; }
+body.mode-mobile .ui-btn { width: 80vw; min-width: unset; }
+
+/* Media Queries for safety */
+@media (max-width: 600px) {
+    body:not(.mode-pc):not(.mode-tablet) #chessboard { width: 90vw; height: 90vw; }
+}

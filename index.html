@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PLAY CHESS W/ DANIEL</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Lightweight chess engine for move validation/logic -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+</head>
+<body>
+    <!-- Visual Overlays -->
+    <div id="vignette" class="overlay"></div>
+    <div id="film-grain" class="overlay"></div>
+
+    <!-- Screen 1: Device Selection -->
+    <div id="screen-device" class="screen active">
+        <h2>HOW ARE YOU PLAYING?</h2>
+        <div class="button-group horizontal">
+            <button class="ui-btn device-btn" data-device="pc">🖥️ PC</button>
+            <button class="ui-btn device-btn" data-device="tablet">📱 TABLET</button>
+            <button class="ui-btn device-btn" data-device="mobile">📱 MOBILE</button>
+        </div>
+    </div>
+
+    <!-- Screen 2: Main Menu -->
+    <div id="screen-menu" class="screen">
+        <h1 class="title">PLAY CHESS W/ <span class="daniel-text">DANIEL</span></h1>
+        <div class="button-group vertical">
+            <button id="btn-play" class="ui-btn">PLAY</button>
+            <button id="btn-load" class="ui-btn">LOAD GAME</button>
+            <button id="btn-settings" class="ui-btn">SETTINGS</button>
+            <button id="btn-exit" class="ui-btn">EXIT</button>
+        </div>
+        <p id="load-msg" class="sys-msg"></p>
+    </div>
+
+    <!-- Screen 3: Settings -->
+    <div id="screen-settings" class="screen">
+        <h2>SETTINGS</h2>
+        <div class="settings-grid">
+            <label>MUSIC:</label>
+            <button id="toggle-music" class="ui-btn small">ON</button>
+            
+            <label>UI SOUNDS:</label>
+            <button id="toggle-sfx" class="ui-btn small">ON</button>
+            
+            <label>UI MODE:</label>
+            <select id="select-device" class="ui-select">
+                <option value="pc">PC</option>
+                <option value="tablet">TABLET</option>
+                <option value="mobile">MOBILE</option>
+            </select>
+
+            <label>AI DIFFICULTY:</label>
+            <select id="select-diff" class="ui-select">
+                <option value="easy">EASY</option>
+                <option value="normal">NORMAL</option>
+                <option value="hard">HARD</option>
+                <option value="nightmare">NIGHTMARE</option>
+            </select>
+        </div>
+        <button id="btn-settings-back" class="ui-btn mt-2">BACK</button>
+    </div>
+
+    <!-- Screen 4: Exit Sequence -->
+    <div id="screen-exit" class="screen black-screen">
+        <h1 id="exit-text" class="hidden red-glow">DANIEL WILL HUNT YOU</h1>
+        <p id="exit-fallback" class="hidden mt-2">You may close this window now.</p>
+    </div>
+
+    <!-- Screen 5: Story Intro -->
+    <div id="screen-story" class="screen black-screen text-center">
+        <div id="story-text-container" class="story-text"></div>
+        <button id="btn-skip-story" class="ui-btn hidden mt-2">CONTINUE</button>
+    </div>
+
+    <!-- Screen 6: Daniel Intro -->
+    <div id="screen-daniel-intro" class="screen black-screen">
+        <div id="daniel-image-container" class="fade-in-slow hidden">
+            <!-- ================================ -->
+            <!-- CUSTOM DANIEL IMAGE PLACEHOLDER  -->
+            <!-- ================================ -->
+            <img src="assets/images/DANIEL.png" alt="Daniel" id="daniel-img" onerror="this.src=''; this.alt='DANIEL IMAGE NOT FOUND'; this.classList.add('error-text');">
+        </div>
+        <h2 id="daniel-intro-text" class="hidden mt-2 text-shadow">Are you ready, Detective?</h2>
+    </div>
+
+    <!-- Screen 7: Game UI -->
+    <div id="screen-game" class="screen">
+        <div id="game-container">
+            <div id="daniel-dialogue" class="dialogue-box hidden">Interesting...</div>
+            <div id="turn-indicator">YOUR TURN</div>
+            
+            <div id="chessboard-container">
+                <div id="chessboard"></div>
+            </div>
+
+            <div id="player-area">
+                <!-- ================================ -->
+                <!-- THINKING HANDS PLACEHOLDER       -->
+                <!-- ================================ -->
+                <img src="assets/images/THINKING_HANDS.png" alt="Thinking Hands" class="thinking-hands" onerror="this.style.display='none';">
+            </div>
+
+            <div id="game-controls">
+                <button id="btn-game-save" class="ui-btn small">SAVE</button>
+                <button id="btn-game-menu" class="ui-btn small">MENU</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen 8: Victory -->
+    <div id="screen-victory" class="screen black-screen">
+        <h1 id="victory-text">YOU ESCAPED <span id="death-text">DEATH</span></h1>
+        <div class="button-group vertical mt-2">
+            <button id="btn-vic-menu" class="ui-btn">RETURN TO MAIN MENU</button>
+        </div>
+    </div>
+
+    <!-- Screen 9: Defeat -->
+    <div id="screen-defeat" class="screen black-screen">
+        <div id="defeat-flash" class="overlay hidden"></div>
+        <!-- ================================ -->
+        <!-- BASEBALL BAT PLACEHOLDER         -->
+        <!-- ================================ -->
+        <img src="assets/images/BASEBALL_BAT.png" alt="Baseball Bat" id="bat-img" class="hidden" onerror="this.style.display='none';">
+        <h1 id="defeat-text" class="hidden red-glow">NICE TRY, DETECTIVE</h1>
+        <div class="button-group vertical mt-2 defeat-btns hidden">
+            <button id="btn-def-retry" class="ui-btn">TRY AGAIN</button>
+            <button id="btn-def-menu" class="ui-btn">RETURN TO MAIN MENU</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
